@@ -84,17 +84,22 @@ int numberOfNodes;
 int passesThrough[MAX_ENTRIES];
 
 void initializeMatrices() {
+    numberOfNodes = planets.size();
+    
+    //initialize with max values
+    for(int i = 0; i < MAX_ENTRIES; i++) {
+        for(int j = 0; j < MAX_ENTRIES; j++) {
+            distanceMatrix[i][j] = THEORETICAL_MAX;
+        }
+    }
+
+    //set edges that are actually connected
     for(int i = 0; i < edges.size(); i++) {
         distanceMatrix[edges[i].start->id][edges[i].end->id] = edges[i].distance;
     }
 
-    for(int i = 0; i < MAX_ENTRIES; i++) {
-        distances[i] = THEORETICAL_MAX;
-    }
-    //planet A's distance is automatically 0
-    distances[0] = 0;
-    //planet A passes through no one
-    passesThrough[0] = -1;
+    //fill all distances with max
+    fill(distances , distances+numberOfNodes , THEORETICAL_MAX); 
 }
 
 int getNearestAdjacent() {
@@ -112,16 +117,23 @@ int getNearestAdjacent() {
 void displayShortestDistances() {
     cout << "Planet" << "\t" << "Shortest Distance from A" << endl;
     for(int i = 0; i < numberOfNodes; i++) {
-        cout << i << "\t" << distances[i] << endl;
+        cout << (char)(i + 65) << "\t\t" << distances[i] << endl;
     }
 }
 
 void dijkstra() {
-    for(int i = 0; i < numberOfNodes; i++) {
+    //planet A's distance is automatically 0
+    distances[0] = 0;
+    //planet A passes through no one
+    passesThrough[0] = -1;
+
+    for(int i = 0; i < numberOfNodes - 1; i++) {
         int nearestIndex = getNearestAdjacent();
         nodesVisited[nearestIndex] = true;
         for(int adjacent = 0; adjacent < numberOfNodes; adjacent++) {
-            if(
+            if (
+                (!nodesVisited[adjacent])
+                &&
                 //there is a connection between the 2
                 (distanceMatrix[nearestIndex][adjacent] != THEORETICAL_MAX)
                 &&
@@ -141,4 +153,6 @@ void dijkstra() {
 int main() {
     loadFromFile();
     initializeMatrices();
+    dijkstra();
+    displayShortestDistances();
 }
