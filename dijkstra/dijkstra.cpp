@@ -1,9 +1,13 @@
+#ifndef DIJKSTRA_H
+#define DIJKSTRA_H
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <cmath>
+// #include "../Planet.h"
+// #include "../Edge.h"
 using namespace std;
-
+//REUSE FOR OTHER ALGOS
 class Planet {
     public:
         string name;
@@ -24,8 +28,9 @@ Planet::Planet(int id, string name, int x, int y, int z, int weight, int profit)
     this->z = z;
     this->weight = weight;
     this->profit = profit;
-}
+};
 
+//REUSE FOR OTHER ALGOS
 class Edge {
     public:
         Planet* start;
@@ -39,11 +44,14 @@ Edge::Edge(Planet* start, Planet* end) {
     this->end = end;
     //calculate distance between planets
     this->distance = sqrt(pow(end->x - start->x, 2) + pow(end->y - start->y, 2) + pow(end->z - start->z, 2));
-}
+    // cout << start->name << " " << this->distance << " " << end->name << endl;
+};
 
+//REUSE FOR OTHER ALGOS
 vector<Planet> planets;
 vector<Edge> edges;
 
+//REUSE FOR OTHER ALGOS
 void loadFromFile() {
     ifstream input;
     input.open("../A2planets.txt");
@@ -75,16 +83,19 @@ void loadFromFile() {
 }
 
 //dijkstra starts from here
+//basically infinity lah
 const int THEORETICAL_MAX = 1000000;
-const int MAX_ENTRIES = 100;
+const int MAX_ENTRIES = 10;
 int distanceMatrix[MAX_ENTRIES][MAX_ENTRIES];
 int distances[MAX_ENTRIES];
 bool nodesVisited[MAX_ENTRIES] = {0};
 int numberOfNodes;
 int passesThrough[MAX_ENTRIES];
 
-void initializeMatrices() {
-    numberOfNodes = planets.size();
+//PART OF IT CAN REUSE FOR OTHER ALGOS
+void initializeMatrices() {    
+    //==============================
+    //CAN REUSE FOR OTHER ALGORITHMS FROM HERE
     
     //initialize with max values
     for(int i = 0; i < MAX_ENTRIES; i++) {
@@ -98,8 +109,37 @@ void initializeMatrices() {
         distanceMatrix[edges[i].start->id][edges[i].end->id] = edges[i].distance;
     }
 
+    //to print the adjacency matrix (can make it look better)
+    //use setw()
+    for(int k = 0; k < MAX_ENTRIES; k++) {
+        cout << (char)(k+65) << " ";
+    }
+    cout << endl;
+
+    for(int i = 0; i < MAX_ENTRIES; i++) {
+        cout << (char)(i + 65) << " ";
+        for(int j = 0; j < MAX_ENTRIES; j++) {
+            if(distanceMatrix[i][j] == THEORETICAL_MAX) {
+                cout << "-" << " ";
+            } else {
+                cout << distanceMatrix[i][j] << " ";
+            }
+        }
+        cout << endl;
+    }
+    //TILL HERE
+    //==============================
+
+
+    numberOfNodes = planets.size();
     //fill all distances with max
     fill(distances , distances+numberOfNodes , THEORETICAL_MAX); 
+
+    //planet A's distance is automatically 0
+    distances[0] = 0;
+    //planet A passes through no one
+    //can track when we reached the start node later
+    passesThrough[0] = -1;
 }
 
 int getNearestAdjacent() {
@@ -115,18 +155,32 @@ int getNearestAdjacent() {
 }
 
 void displayShortestDistances() {
-    cout << "Planet" << "\t" << "Shortest Distance from A" << endl;
+    cout << setw(30) << left << "Planet" << setw(30) << left << "Shortest Distance from A" << setw(30) << left << "Passes Through" << endl;
     for(int i = 0; i < numberOfNodes; i++) {
-        cout << (char)(i + 65) << "\t\t" << distances[i] << endl;
+        cout << setw(30) << left << (char)(i + 65) << setw(30) << left << distances[i];
+        cout << (char)(i + 65) << " - ";
+        int passingThrough = passesThrough[i];
+        //till it reaches planet A
+        while(passingThrough != -1) {
+            cout << (char)(passingThrough + 65) << " - ";
+            // //to next node in path
+            passingThrough = passesThrough[passingThrough];
+        }
+        cout << endl;
     }
 }
 
-void dijkstra() {
-    //planet A's distance is automatically 0
-    distances[0] = 0;
-    //planet A passes through no one
-    passesThrough[0] = -1;
+void displayGraph() {
+    cout << "        A     " << endl;
+    cout << "  ⁄    / \\   ⧹ " << endl;
+    cout << " D    J   H   F" << endl;
+    cout << " |    |   |   |" << endl;
+    cout << " B    G   I   C" << endl;
+    cout << "  ⧹    \\  /  ⁄" << endl;
+    cout << "        E     " << endl;
+}
 
+void dijkstra() {
     for(int i = 0; i < numberOfNodes - 1; i++) {
         int nearestIndex = getNearestAdjacent();
         nodesVisited[nearestIndex] = true;
@@ -155,4 +209,7 @@ int main() {
     initializeMatrices();
     dijkstra();
     displayShortestDistances();
+    displayGraph();
 }
+
+#endif
