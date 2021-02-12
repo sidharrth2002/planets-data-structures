@@ -110,28 +110,39 @@ void initializeMatrices() {
 
 int knapsack() {
     cout << "The 0/1 Knapsack Table: " << endl;
+    //for each item
     for(int i = 0; i <= numItems; i++) {
+        //till reaching max capacity
         for(int w = 0; w <= capacity; w++) {
+            //first row and col by default 0
+            //counting starts from 0
             if(i == 0 || w == 0) {
                 Knapsack[i][w] = 0;
             } else if(planets[i].weight <= w) {
+              //if the current capacity can fit the item
+              //check if adding that item yields greater profit than bag without the planet
                 Knapsack[i][w] = max(planets[i].profit + Knapsack[i-1][w-planets[i].weight], 
                                     Knapsack[i-1][w]);
             } else {
+                //if not then don't take the planet
+                //get value from row above
                 Knapsack[i][w] = Knapsack[i-1][w];
             }
             cout << setw(5) << Knapsack[i][w] << " ";
         }
         cout << endl;
     }
+
     cout << "What planets to pass through boss?" << endl << endl;
     int i = numItems;
     int j = capacity;
 
     //iterate through table to see what items we take
     while(i > 0 && j > 0) {
+        //if the value is not the same as the row above
+        //that planet has been taken
         if(Knapsack[i][j] != Knapsack[i-1][j]) {
-            cout << "Planet " << planets[i].name << " is taken with benefit = " << planets[i].profit 
+            cout << "Planet " << (char)(planets[i].id + 65) << " is taken with benefit = " << planets[i].profit 
             << " and weight = " << planets[i].weight << endl;
             j = j - planets[i].weight;
             i--;
