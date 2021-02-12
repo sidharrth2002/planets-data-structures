@@ -108,7 +108,7 @@ void initializeMatrices() {
     planets.insert(planets.begin(), dummy);
 }
 
-int knapsack() {
+void knapsack() {
     cout << "The 0/1 Knapsack Table: " << endl;
     //for each item
     for(int i = 0; i <= numItems; i++) {
@@ -147,6 +147,7 @@ int knapsack() {
             j = j - planets[i].weight;
             i--;
         } else {
+            // cout << "Planet " << (char)(planets[i].id + 65) << " not taken with benefit = " << planets[i].profit << endl;
             i--;
         }
     }
