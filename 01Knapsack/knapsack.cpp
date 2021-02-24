@@ -8,8 +8,6 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
-// #include "../Planet.h"
-// #include "../Edge.h"
 using namespace std;
 //REUSE FOR OTHER ALGOS
 class Planet {
@@ -136,6 +134,9 @@ void knapsack() {
     int i = numItems;
     int j = capacity;
 
+    int totalBenefit;
+    int totalWeight;
+
     //iterate through table to see what items we take
     while(i > 0 && j > 0) {
         //if the value is not the same as the row above
@@ -143,13 +144,19 @@ void knapsack() {
         if(Knapsack[i][j] != Knapsack[i-1][j]) {
             cout << "Planet " << (char)(planets[i].id + 65) << " with benefit = " << planets[i].profit 
             << " and weight = " << planets[i].weight << endl;
+            totalBenefit += planets[i].profit;
+            totalWeight += planets[i].weight;
             j = j - planets[i].weight;
             i--;
         } else {
-            // cout << "Planet " << (char)(planets[i].id + 65) << " not taken with benefit = " << planets[i].profit << endl;
             i--;
         }
     }
+    cout << endl << "===================================" << endl;
+    cout << "TOTAL BENEFIT = " << totalBenefit << endl;
+    cout << "TOTAL WEIGHT = " << totalWeight << endl;
+    cout << "===================================" << endl;
+
 }
 
 int main() {
