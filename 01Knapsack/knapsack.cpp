@@ -59,7 +59,6 @@ vector<Edge> edges;
 void loadFromFile() {
     ifstream input;
     input.open("../A2planets.txt");
-
     string name;
     int x, y, z, weight, profit;
 
@@ -142,7 +141,7 @@ void knapsack() {
         //if the value is not the same as the row above
         //that planet has been taken
         if(Knapsack[i][j] != Knapsack[i-1][j]) {
-            cout << "Planet " << (char)(planets[i].id + 65) << " is taken with benefit = " << planets[i].profit 
+            cout << "Planet " << (char)(planets[i].id + 65) << " with benefit = " << planets[i].profit 
             << " and weight = " << planets[i].weight << endl;
             j = j - planets[i].weight;
             i--;
