@@ -83,6 +83,7 @@ const int MAX_ENTRIES = 10;
 int distanceMatrix[MAX_ENTRIES][MAX_ENTRIES];
 
 
+
 //PART OF IT CAN REUSE FOR OTHER ALGOS
 void initializeMatrices() {    
     //==============================
@@ -98,74 +99,141 @@ void initializeMatrices() {
     //set edges that are actually connected
     for(int i = 0; i < edges.size(); i++) {
         distanceMatrix[edges[i].start->id][edges[i].end->id] = edges[i].distance;
+        
     }
 
     //to print the adjacency matrix (can make it look better)
-    //use setw()
+    
+    cout << "ADJACENCY MATRIX: " << endl;
+    cout << "=================================================================" << endl;
     for(int k = 0; k < MAX_ENTRIES; k++) {
-        cout << (char)(k+65) << " ";
+        if(k == 0) {
+            cout << setw(8) << (char)(k+65) << " ";
+        } else {
+            cout << setw(4) << (char)(k+65) << " ";
+        }
     }
     cout << endl;
 
     for(int i = 0; i < MAX_ENTRIES; i++) {
-        cout << (char)(i + 65) << " ";
+        cout << setw(4) << (char)(i + 65) << " ";
         for(int j = 0; j < MAX_ENTRIES; j++) {
             if(distanceMatrix[i][j] == THEORETICAL_MAX) {
-                cout << "-" << " ";
+                cout << setw(4) << "-" << " ";
             } else {
-                cout << distanceMatrix[i][j] << " ";
+                cout << setw(4) << distanceMatrix[i][j] << " ";
             }
         }
         cout << endl;
     }
+    cout << endl << "=================================================================" << endl;
 }
 
 //QUICK SORT BEGINS HERE
-
+//EDGES
 int partitionEdge(vector<Edge> &values, int left, int right) {
     int pivotIndex = left + (right - left) / 2;
-    int pivotValue = values[pivotIndex].start->x;
-    int i = left, 
-    j = right;
-    int temp;
+    int pivotValue = values[pivotIndex].distance;
+    int x = left;
+    int y = right;
+
+    while(x <= y) {
+        while(values[x].distance < pivotValue) {
+            x++;
+        }
+        while(values[y].distance > pivotValue) {
+            y--;
+        }
+
+        //This part is for swapping
+        
+        if(x <= y) {
+            Edge temp = values[x];
+            values[x] = values[y];
+            values[y] = temp;
+
+            x++;
+            y--;
+        }
+    }
+    return x;   
+}
+
+
+void quicksort(vector<Edge> &value, int left, int right) {
+
+    if(left < right) {
+        int pivotIndex = partitionEdge(value, left, right);
+        quicksort(value, left, pivotIndex - 1);
+        quicksort(value, pivotIndex, right);   
+    }
+}
+
+
+//PLANET
+int partition(vector<Planet> &values, int left, int right) {
+    int pivotIndex = left + (right - left) / 2;
+    int pivotValue = values[pivotIndex].profit;
+    int i = left;
+    int j = right;
+    
+ 
     while(i <= j) {
-        while(values[i].distance < pivotValue) {
+        while(values[i].profit > pivotValue) {
             i++;
         }
-        while(values[j].distance > pivotValue) {
+        while(values[j].profit < pivotValue) {
             j--;
         }
 
         //This part is for swapping
         if(i <= j) {
-            temp = values[i].distance;
-            values[i].distance = values[j].distance;
-            values[j].distance = temp;
+            Planet temp = values[i];
+            values[i] = values[j];
+            values[j] = temp;
             i++;
-            j--;
+            j++;
         }
     }
     return i;
     
 }
 
-
-
-
-
-void quicksort(vector<Edge> &value, int left, int right) {
+void quicksort(vector<Planet> &values, int left, int right) {
     if(left < right) {
-        int pivotIndex = partitionEdge(value, left, right);
-        // int pivotIndex = 0;
-        quicksort(value, left, pivotIndex - 1);
-        quicksort(value, pivotIndex, right);
+        int pivotIndex = partition(values, left, right);
+        quicksort(values, left, pivotIndex - 1);
+        quicksort(values, pivotIndex, right);
     }
 }
 
-
-  
     int main() {
-    loadFromFile();
-    initializeMatrices();
+        loadFromFile();
+        initializeMatrices();
+        
+        //EDGES
+        cout << "  " << endl;
+        cout << " " << endl;
+        cout << "Edges sorted by ascending order of distance: " << endl;
+        quicksort(edges, 0, edges.size() - 1);  
+
+        //Print the list
+         for (int i = 0; i < edges.size(); i++) {
+             cout << edges[i].start->name<< " " << edges[i].end->name << " "<< edges[i].distance<<  endl;
+        }
+        
+
+        //PLANETS
+        cout << "  " << endl;
+        cout << "  " << endl;
+        cout << "Planet sorted by profits " << endl;
+        quicksort(planets, 0, planets.size() - 1); 
+
+        //Print the list
+        for (int i = 0; i < planets.size(); i++) {
+            cout << planets[i].profit<< " "  << planets[i].name << endl;
+         }
+        
+    return 0;
  
 }
