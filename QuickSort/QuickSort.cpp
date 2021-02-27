@@ -15,6 +15,7 @@ class Planet {
         int z;
         int weight;
         int profit;
+        double value;
         Planet(int id, string name, int x, int y, int z, int weight, int profit);
 };
 
@@ -26,6 +27,7 @@ Planet::Planet(int id, string name, int x, int y, int z, int weight, int profit)
     this->z = z;
     this->weight = weight;
     this->profit = profit;
+    this->value = profit/weight;
 };
 
 class Edge {
