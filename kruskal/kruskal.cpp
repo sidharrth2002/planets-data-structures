@@ -93,10 +93,10 @@ class PriorityQueue {
   void heapify_enqueue (int index) {   // used in enqueue.
     if (index == 0)                    // if already at root.
       return;
-    
+
     // parent index
     int parent = (index-1)/2;
-    
+
     // swap if parent is smaller
     if (A[index] > A[parent]) {
         swap(A[index], A[parent]);
@@ -107,14 +107,14 @@ class PriorityQueue {
 
 
   }
-    
+
   void heapify_dequeue (int index) {   // used in dequeue.
     int max;                           // max index
     // left child index
     int left = 2*index + 1;
     // right child index
     int right = 2*index + 2;
-    
+
     // compare and find the greatest child
     if (right < A.size()) {
         if (A[left] > A[right]) {
@@ -139,13 +139,13 @@ class PriorityQueue {
       heapify_dequeue (max);
     }
   }
-  
+
  public:
   void enqueue (T element) {
     A.push_back (element);
     heapify_enqueue (A.size()-1);  // start at last element.
   }
-  
+
   T dequeue() {
     T removed_element = A[0];
     A[0] = A[A.size()-1];          // copy last element to root.
@@ -153,7 +153,7 @@ class PriorityQueue {
     heapify_dequeue (0);           // start at root.
     return removed_element;
   }
-  
+
   int size() {
     return A.size();
   }
@@ -162,16 +162,97 @@ class PriorityQueue {
     for (int i = 0; i < A.size(); i++)
       cout << A[i] << " ";
     cout << endl;
-  }  
+  }
 };
 
-void kruskalmst()
+////////////////
+//CODES FROM SLIDES STARTS HERE
+void kruskalmst(Planet p[], int pcount,Edge e[],int edgecount, Edge t[]){
+  for (int i=0; i<pcount; i++)
+  {
+    for (int j=0; j<pcount; j++)
+        p[i].cloud[j] =0;
+    p[i].cloud[i] = i;
+  }
+  PriorityQueue pq;
+
+  for (int i =0; i<edgecount; i++)
+      pq.enqueue(e[i]);
+
+  int tcount = 0;
+  Edge current;
+  int u,v;
+
+  While (tcount < pcount-1)
+  {
+    current = pq.dequeue();
+    u = current.planet1;
+    v = current.planet2;
+    cout << u << "," << v << "," << current.distance << endl;
+
+    if (checkCloud(p,pcount,u,v) == false)
+    {
+      t[tcount] = current;
+      tcount += 1;
+      mergeCloud(p,pcount,u,v);
+    }
+
+  }
+}
+
+void edges(char m[7][7], Edge t[], int tcount)
+{
+  for (int i=0; i<tcount; i++)
+  {
+    connect(m,t[i].planet+1,t[i].planet2+1)
+  }
+}
+
+void display(char m[7][7])
+{}
+
+void drawGraph(Edge t[], int tcount)
+{
+  char map[7][7];
+
+  initmap(map);
+
+  planets(map);
+
+  edges(map,t,tcount);
+
+  display(map);
+
+}
+
 
 int main() {
+  connst int n= 10;
+  Planet p[n];
+
+  displayPlanets(p,n);
+
+  const int maxedge= 20;
+  Edge e[maxedge];
+  int edgecount;
+
+  readGraph("edges.txt",p,e,edgecount);
+
+  Edge tree[n];
+
+  kruskalmst(p,n,e,edgecount,tree);
+
+  displayEdges(tree, n-1);
+
+  drawGraph(tree,n-1);
+  //ENDS HERE
+  ////////////////
     loadFromFile();
     for(int i = 0; i < numP; i++) {
         for(int j = 0; j < numP; j++) {
             planets[i].cloud[]
         }
     }
+
+
 }
