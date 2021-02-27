@@ -11,5 +11,4 @@ Edge::Edge(Planet* start, Planet* end) {
     this->end = end;
     //calculate distance between planets
     this->distance = sqrt(pow(end->x - start->x, 2) + pow(end->y - start->y, 2) + pow(end->z - start->z, 2));
-    // cout << start->name << " " << this->distance << " " << end->name << endl;
 };
