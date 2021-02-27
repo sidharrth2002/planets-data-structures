@@ -15,7 +15,7 @@ class Planet {
         int z;
         int weight;
         int profit;
-        double value;
+        // double value;
         Planet(int id, string name, int x, int y, int z, int weight, int profit);
 };
 
@@ -27,7 +27,7 @@ Planet::Planet(int id, string name, int x, int y, int z, int weight, int profit)
     this->z = z;
     this->weight = weight;
     this->profit = profit;
-    this->value = profit/weight;
+    // this->value = profit/weight;
 };
 
 class Edge {
@@ -130,6 +130,62 @@ void initializeMatrices() {
     cout << endl << "=================================================================" << endl;
 }
 
+
+//Adjacency list 
+void addEdge(vector<string> adj[], int u, string v) 
+{ 
+    adj[u].push_back(v); 
+   
+} 
+
+void printGraph (vector<string> adj[], int V) 
+{ 
+    for (int v = 0; v < V; ++v) 
+    { 
+        cout << v ;
+        if (adj[v].empty()){
+                 cout << "->No adjacency";
+             } 
+    
+        for (auto x : adj[v]) {
+            cout << "->" << x; 
+           
+        }
+        printf("\n"); 
+    } 
+}  
+
+void Adjacencylist() {
+        
+        cout << " "<< endl;
+        cout << "Adjacency list "<< endl;
+         int V = 10; 
+        
+    vector<string> adj[V]; 
+    addEdge(adj, 0, planets[3].name); 
+    addEdge(adj, 0, planets[5].name);
+    addEdge(adj, 0, planets[7].name);
+    addEdge(adj, 0, planets[9].name);
+    addEdge(adj, 1, planets[4].name);
+    addEdge(adj, 1, planets[6].name);
+    addEdge(adj, 2, planets[4].name);
+    addEdge(adj, 3, planets[1].name);
+    addEdge(adj, 3, planets[9].name); 
+    addEdge(adj, 5, planets[2].name);
+    addEdge(adj, 6, planets[4].name);
+    addEdge(adj, 6, planets[8].name);
+    addEdge(adj, 7, planets[5].name);
+    addEdge(adj, 7, planets[8].name);
+    addEdge(adj, 8, planets[2].name);
+    addEdge(adj, 8, planets[4].name);
+    addEdge(adj, 9, planets[6].name);
+    addEdge(adj, 9, planets[7].name);
+    printGraph(adj, V); 
+        
+
+}
+
+
 //QUICK SORT BEGINS HERE
 //EDGES
 int partitionEdge(vector<Edge> &values, int left, int right) {
@@ -175,28 +231,28 @@ void quicksort(vector<Edge> &value, int left, int right) {
 int partition(vector<Planet> &values, int left, int right) {
     int pivotIndex = left + (right - left) / 2;
     int pivotValue = values[pivotIndex].profit;
-    int i = left;
-    int j = right;
+    int x = left;
+    int y = right;
     
  
-    while(i <= j) {
-        while(values[i].profit > pivotValue) {
-            i++;
+    while(x <= y) {
+        while(values[x].profit > pivotValue) {
+            x++;
         }
-        while(values[j].profit < pivotValue) {
-            j--;
+        while(values[y].profit < pivotValue) {
+            y--;
         }
 
         //This part is for swapping
-        if(i <= j) {
-            Planet temp = values[i];
-            values[i] = values[j];
-            values[j] = temp;
-            i++;
-            j++;
+        if(x <= y) {
+            Planet temp = values[x];
+            values[x] = values[y];
+            values[y] = temp;
+            x++;
+            y++;
         }
     }
-    return i;
+    return x;
     
 }
 
@@ -211,11 +267,12 @@ void quicksort(vector<Planet> &values, int left, int right) {
     int main() {
         loadFromFile();
         initializeMatrices();
-        
+        Adjacencylist();
+
         //EDGES
         cout << "  " << endl;
         cout << " " << endl;
-        cout << "Edges sorted by ascending order of distance: " << endl;
+        cout << "Edges sorted in ascending order of distance: " << endl;
         quicksort(edges, 0, edges.size() - 1);  
 
         //Print the list
@@ -227,14 +284,15 @@ void quicksort(vector<Planet> &values, int left, int right) {
         //PLANETS
         cout << "  " << endl;
         cout << "  " << endl;
-        cout << "Planet sorted by profits " << endl;
+        cout << "List of planets in descending order of value: " << endl;
         quicksort(planets, 0, planets.size() - 1); 
 
         //Print the list
         for (int i = 0; i < planets.size(); i++) {
-            cout << planets[i].profit<< " "  << planets[i].name << endl;
+            cout << planets[i].id<<":"<< planets[i].name << " ("<< planets[i].x <<"," <<planets[i].y<<"," << planets[i].z<< ") Weight=" << planets[i].weight<< " Profit=" <<planets[i].profit<< " Value=" << endl;
          }
         
     return 0;
  
 }
+
