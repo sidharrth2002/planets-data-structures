@@ -27,6 +27,9 @@ Planet::Planet(int id, string name, int x, int y, int z, int weight, int profit)
     this->z = z;
     this->weight = weight;
     this->profit = profit;
+    if(weight == 0){
+        this->value =0;
+    }
     if(weight != 0) {
         this->value = profit/weight;
     }};
@@ -218,53 +221,53 @@ int partitionEdge(vector<Edge> &values, int left, int right) {
 }
 
 
-void quicksort(vector<Edge> &value, int left, int right) {
+void quicksortEdges(vector<Edge> &value, int left, int right) {
 
     if(left < right) {
         int pivotIndex = partitionEdge(value, left, right);
-        quicksort(value, left, pivotIndex - 1);
-        quicksort(value, pivotIndex, right);   
+        quicksortEdges(value, left, pivotIndex - 1);
+        quicksortEdges(value, pivotIndex, right);   
     }
 }
 
 
 //PLANET
-int partition(vector<Planet> &values, int left, int right) {
+int partitionPlanet(vector<Planet> &values, int left, int right) {
     int pivotIndex = left + (right - left) / 2;
-    int pivotValue = values[pivotIndex].profit;
+    int pivotValue = values[pivotIndex].value;
     int x = left;
     int y = right;
-    
- 
+
     while(x <= y) {
-        while(values[x].profit > pivotValue) {
+        while(values[x].value > pivotValue) {
             x++;
         }
-        while(values[y].profit < pivotValue) {
+        while(values[y].value < pivotValue) {
             y--;
         }
 
         //This part is for swapping
+        
         if(x <= y) {
             Planet temp = values[x];
             values[x] = values[y];
             values[y] = temp;
+
             x++;
-            y++;
+            y--;
         }
     }
-    return x;
-    
+    return x;   
 }
 
-void quicksort(vector<Planet> &values, int left, int right) {
+void quicksortPlanet(vector<Planet> &value, int left, int right) {
+
     if(left < right) {
-        int pivotIndex = partition(values, left, right);
-        quicksort(values, left, pivotIndex - 1);
-        quicksort(values, pivotIndex, right);
+        int pivotIndex = partitionPlanet(value, left, right);
+        quicksortPlanet(value, left, pivotIndex - 1);
+        quicksortPlanet(value, pivotIndex, right);   
     }
 }
-
     int main() {
         loadFromFile();
         initializeMatrices();
@@ -274,11 +277,11 @@ void quicksort(vector<Planet> &values, int left, int right) {
         cout << "  " << endl;
         cout << " " << endl;
         cout << "Edges sorted in ascending order of distance: " << endl;
-        quicksort(edges, 0, edges.size() - 1);  
+        quicksortEdges(edges, 0, edges.size() - 1);  
 
         //Print the list
          for (int i = 0; i < edges.size(); i++) {
-             cout << edges[i].start->name<< " " << edges[i].end->name << " "<< edges[i].distance<<  endl;
+             cout << edges[i].start->id<< " " << edges[i].end->id << " -> "<< edges[i].distance<<  endl;
         }
         
 
@@ -286,11 +289,12 @@ void quicksort(vector<Planet> &values, int left, int right) {
         cout << "  " << endl;
         cout << "  " << endl;
         cout << "List of planets in descending order of value: " << endl;
-        quicksort(planets, 0, planets.size() - 1); 
+        quicksortPlanet(planets, 0, planets.size() - 1); 
 
         //Print the list
+        cout << setw(7) << "ID" << setw(15) << "Name" << setw(15) << "X"<< setw(15) << "Y"<< setw(15)<< "Z"<< setw(15)<< "Weight" << setw(15) << "Profit" <<setw(15) << "Value" << endl << endl;
         for (int i = 0; i < planets.size(); i++) {
-            cout << planets[i].id<<":"<< planets[i].name << " ("<< planets[i].x <<"," <<planets[i].y<<"," << planets[i].z<< ") Weight=" << planets[i].weight<< " Profit=" <<planets[i].profit<< " Value=" << endl;
+            cout << setw(7) << planets[i].id << setw(15) << planets[i].name << setw(15) << planets[i].x << setw(15)<< planets[i].y<< setw(15)<< planets[i].y <<setw(15)<< planets[i].weight << setw(15) << planets[i].profit <<setw(15) <<planets[i].value << endl;
          }
         
     return 0;
