@@ -9,7 +9,6 @@
 #include <cmath>
 #include <algorithm>
 using namespace std;
-//REUSE FOR OTHER ALGOS
 class Planet {
     public:
         string name;
@@ -32,12 +31,11 @@ Planet::Planet(int id, string name, int x, int y, int z, int weight, int profit)
     this->profit = profit;
 };
 
-//REUSE FOR OTHER ALGOS
 class Edge {
     public:
         Planet* start;
         Planet* end;
-        int distance;
+        double distance;
         Edge(Planet* start, Planet* end);
 };
 
@@ -45,15 +43,12 @@ Edge::Edge(Planet* start, Planet* end) {
     this->start = start;
     this->end = end;
     //calculate distance between planets
-    this->distance = sqrt(pow(end->x - start->x, 2) + pow(end->y - start->y, 2) + pow(end->z - start->z, 2));
-    // cout << start->name << " " << this->distance << " " << end->name << endl;
+    this->distance = round(sqrt(pow(end->x - start->x, 2) + pow(end->y - start->y, 2) + pow(end->z - start->z, 2)));
 };
 
-//REUSE FOR OTHER ALGOS
 vector<Planet> planets;
 vector<Edge> edges;
 
-//REUSE FOR OTHER ALGOS
 void loadFromFile() {
     ifstream input;
     input.open("../A2planets.txt");
@@ -125,11 +120,10 @@ void knapsack() {
                 //get value from row above
                 Knapsack[i][w] = Knapsack[i-1][w];
             }
-            cout << setw(5) << Knapsack[i][w] << " ";
+            cout << setw(3) << Knapsack[i][w] << " ";
         }
         cout << endl;
     }
-
     cout << "What planets to pass through boss?" << endl << endl;
     int i = numItems;
     int j = capacity;
@@ -156,7 +150,6 @@ void knapsack() {
     cout << "TOTAL BENEFIT = " << totalBenefit << endl;
     cout << "TOTAL WEIGHT = " << totalWeight << endl;
     cout << "===================================" << endl;
-
 }
 
 int main() {

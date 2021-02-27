@@ -43,7 +43,7 @@ Edge::Edge(Planet* start, Planet* end) {
     this->start = start;
     this->end = end;
     //calculate distance between planets
-    this->distance = sqrt(pow(end->x - start->x, 2) + pow(end->y - start->y, 2) + pow(end->z - start->z, 2));
+    this->distance = round(sqrt(pow(end->x - start->x, 2) + pow(end->y - start->y, 2) + pow(end->z - start->z, 2)));
 };
 
 //REUSE FOR OTHER ALGOS
@@ -81,17 +81,6 @@ void loadFromFile() {
     input.close();
 }
 
-Edge findEdge(int start, int end) {
-    for(int i = 0; i < edges.size(); i++) {
-        Edge edge = edges[i];
-        if((edge.start->id == start && edge.end->id == end) 
-        ||
-        (edge.start->id == end && edge.end->id == start)) {
-            return edge;
-        }
-    }
-}
-
 //dijkstra starts from here
 //basically infinity lah
 const int THEORETICAL_MAX = 1000000;
@@ -101,25 +90,25 @@ int distances[MAX_ENTRIES];
 bool nodesVisited[MAX_ENTRIES] = {0};
 int numberOfNodes;
 int passesThrough[MAX_ENTRIES];
-char finalGraph[7][7];
+char finalGraph[11][11];
 
 //PART OF IT CAN REUSE FOR OTHER ALGOS
 void initializeMatrices() {    
     //==============================
-    //CAN REUSE FOR OTHER ALGORITHMS FROM HERE
-    
+    //CAN REUSE FOR OTHER ALGORITHMS FROM HERE    
     //initialize with max values
     for(int i = 0; i < MAX_ENTRIES; i++) {
         for(int j = 0; j < MAX_ENTRIES; j++) {
             distanceMatrix[i][j] = THEORETICAL_MAX;
         }
     }
-
     //set edges that are actually connected
     for(int i = 0; i < edges.size(); i++) {
         distanceMatrix[edges[i].start->id][edges[i].end->id] = edges[i].distance;
+        distanceMatrix[edges[i].end->id][edges[i].start->id] = edges[i].distance;
+        distanceMatrix[edges[i].start->id][edges[i].start->id] = 0;
+        distanceMatrix[edges[i].end->id][edges[i].end->id] = 0;
     }
-
     //to print the adjacency matrix (can make it look better)
     cout << "ADJACENCY MATRIX: " << endl;
     cout << "=================================================================" << endl;
@@ -131,7 +120,6 @@ void initializeMatrices() {
         }
     }
     cout << endl;
-
     for(int i = 0; i < MAX_ENTRIES; i++) {
         cout << setw(4) << (char)(i + 65) << " ";
         for(int j = 0; j < MAX_ENTRIES; j++) {
@@ -146,18 +134,194 @@ void initializeMatrices() {
     cout << endl << "=================================================================" << endl;
     //TILL HERE
     //==============================
-
-
     numberOfNodes = planets.size();
     //fill all distances with max
     fill(distances , distances+numberOfNodes , THEORETICAL_MAX); 
-
     //planet A's distance is automatically 0
     distances[0] = 0;
     //planet A passes through no one
     //can track when we reached the start node later
     passesThrough[0] = -1;
 }
+
+//larger scale
+void connect(int a, int b) {
+    switch (a) {
+    case 1:     // A
+        if (b == 4)     // connect to D
+        {
+            finalGraph[0][0] = '+';
+            finalGraph[0][1] = '-';
+            finalGraph[0][2] = '-';
+            finalGraph[0][3] = '-';
+            finalGraph[0][4] = '-';
+            finalGraph[1][0] = '|';
+            finalGraph[2][0] = '|';
+        }
+        if (b == 6)     // connect to F
+        {
+            finalGraph[0][6] = '-';
+            finalGraph[0][7] = '-';
+            finalGraph[0][8] = '-'; 
+            finalGraph[0][9] = '-';       
+            finalGraph[0][10] = '+';
+            finalGraph[1][10] = '|';
+            finalGraph[2][10] = '|';
+        }
+        if (b == 10)     // connect to J
+        {
+            finalGraph[0][4] = '-';
+            finalGraph[0][3] = '+';
+            finalGraph[1][3] = '|';
+            finalGraph[2][3] = '|';
+        }
+        if (b == 8)      // connect to H
+        {
+            finalGraph[0][6] = '-';
+            finalGraph[0][7] = '+';
+            finalGraph[1][7] = '|';
+            finalGraph[2][7] = '|';
+        }
+        break;
+    case 2:     // B
+        if (b == 4)     // connect to D
+        {
+            finalGraph[6][0] = '|';
+            finalGraph[5][0] = '|';
+            finalGraph[4][0] = '|';
+        }
+        if (b == 5)     // connect to E
+        {
+            finalGraph[8][0] = '|';
+            finalGraph[9][0] = '|';
+            finalGraph[10][0] = '+';
+            finalGraph[10][1] = '-';
+            finalGraph[10][2] = '-';
+            finalGraph[10][3] = '-';
+            finalGraph[10][4] = '-';
+        }
+        if (b == 7)     // connect to G
+        {
+            finalGraph[7][1] = '-';
+            finalGraph[7][2] = '-';
+        }
+        break;
+    case 3:     // C
+        if (b == 6)     // connect to F
+        {
+            finalGraph[6][10] = '|';
+            finalGraph[5][10] = '|';
+            finalGraph[4][10] = '|';
+        }
+        if (b == 5)     // connect to E
+        {
+            finalGraph[8][10] = '|';
+            finalGraph[9][10] = '|';
+            finalGraph[10][10] = '+';
+            finalGraph[10][9] = '-';
+            finalGraph[10][8] = '-';
+            finalGraph[10][7] = '-';
+            finalGraph[10][6] = '-';
+        }
+        if (b == 9)     // connect to I
+        {
+            finalGraph[7][9] = '-';
+            finalGraph[7][8] = '-';
+        }
+        break;
+    case 4:     // D
+        if (b == 10)     // connect to J
+        {
+            finalGraph[3][1] = '-';
+            finalGraph[3][2] = '-';
+        }
+        break;
+    case 5:     // E
+        if (b == 7)     // connect to G
+        {
+            finalGraph[10][4] = '-';
+            finalGraph[10][3] = '+';
+            finalGraph[9][3] = '|';
+            finalGraph[8][3] = '|';
+        }
+        if (b == 9)     // connect to I
+        {
+            finalGraph[10][6] = '-';
+            finalGraph[10][7] = '+';
+            finalGraph[9][7] = '|';
+            finalGraph[8][7] = '|';
+        }
+        break;
+    case 6:     // F
+        if (b == 8)     // connect to H
+        {
+            finalGraph[3][9] = '-';
+            finalGraph[3][8] = '-';
+        }
+        break;
+    case 7:     // G
+        if (b == 10)     // connect to J
+        {
+            finalGraph[6][3] = '|';
+            finalGraph[5][3] = '|';
+            finalGraph[4][3] = '|';
+        }
+        if (b == 9)     // connect to I
+        {
+            finalGraph[7][4] = '-';
+            finalGraph[7][5] = '-';
+            finalGraph[7][6] = '-';
+        }
+        break;
+    case 8:     // H
+        if (b == 10)     // connect to J
+        {
+            finalGraph[3][6] = '-';
+            finalGraph[3][5] = '-';
+            finalGraph[3][4] = '-';
+        }
+        if (b == 9)     // connect to I
+        {
+            finalGraph[4][7] = '|';
+            finalGraph[5][7] = '|';
+            finalGraph[6][7] = '|';
+        }
+        break;
+    }
+}
+
+
+void initmap() {
+    for (int i=0; i<11; i++)
+        for (int j=0; j<11; j++)
+           finalGraph[i][j] = ' ';
+}
+
+void setPlanetsGraph() {
+    finalGraph[0][5] = 'A';
+    finalGraph[7][0] = 'B';
+    finalGraph[7][10] = 'C';
+    finalGraph[3][0] = 'D';
+    finalGraph[10][5] = 'E';
+    finalGraph[3][10] = 'F';
+    finalGraph[7][3] = 'G';
+    finalGraph[3][7] = 'H';
+    finalGraph[7][7] = 'I';
+    finalGraph[3][3] = 'J';
+}
+
+void displayGraph() {
+    cout << endl;
+    cout << "FINAL GRAPH: " << endl;
+    for (int i=0; i<11; i++)
+    {
+        cout << "  ";
+        for (int j=0; j<11; j++)
+           cout << finalGraph[i][j] << " ";
+        cout << endl;
+    }
+}
+
 
 int getNearestAdjacent() {
     int minimum = THEORETICAL_MAX;
@@ -171,143 +335,27 @@ int getNearestAdjacent() {
     return minimumNodeIndex;
 }
 
-void connect(int a, int b) {
-    switch (a) {
-    case 1:     // A
-        if (b == 4)     // connect to D
-        {
-            finalGraph[0][0] = '+';
-            finalGraph[0][1] = '-';
-            finalGraph[0][2] = '-';
-            finalGraph[1][0] = '|';
+void dijkstra() {
+    for(int i = 0; i < numberOfNodes - 1; i++) {
+        int nearestIndex = getNearestAdjacent();
+        nodesVisited[nearestIndex] = true;
+        for(int adjacent = 0; adjacent < numberOfNodes; adjacent++) {
+            if (
+                (!nodesVisited[adjacent])
+                &&
+                //there is a connection between the 2
+                (distanceMatrix[nearestIndex][adjacent] != THEORETICAL_MAX)
+                &&
+                //if going through this vertice would help reach destination faster
+                (distances[nearestIndex] + distanceMatrix[nearestIndex][adjacent] < distances[adjacent]) 
+            ) {
+                //this is now the new distance
+                distances[adjacent] = distances[nearestIndex] + distanceMatrix[nearestIndex][adjacent];
+                //to get to this node have to pass through this index
+                //can trace path later
+                passesThrough[adjacent] = nearestIndex;
+            }
         }
-        if (b == 6)     // connect to F
-        {
-            finalGraph[0][6] = '+';
-            finalGraph[0][5] = '-';
-            finalGraph[1][6] = '|';
-        }
-        if (b == 10)     // connect to J
-        {
-            finalGraph[0][2] = '+';
-            finalGraph[1][2] = '|';
-        }
-        if (b == 8)      // connect to H
-        {
-            finalGraph[0][4] = '+';
-            finalGraph[1][4] = '|';
-        }
-        break;
-    case 2:     // B
-        if (b == 4)     // connect to D
-        {
-            finalGraph[3][0] = '|';
-        }
-        if (b == 5)     // connect to E
-        {
-            finalGraph[6][0] = '+';
-            finalGraph[6][1] = '-';
-            finalGraph[6][2] = '-';
-            finalGraph[5][0] = '|';
-        }
-        if (b == 7)     // connect to G
-        {
-            finalGraph[4][1] = '-';
-        }
-        break;
-    case 3:     // C
-        if (b == 6)     // connect to F
-        {
-            finalGraph[3][6] = '|';
-        }
-        if (b == 5)     // connect to E
-        {
-            finalGraph[6][6] = '+';
-            finalGraph[6][5] = '-';
-            finalGraph[6][4] = '-';
-            finalGraph[5][6] = '|';
-        }
-        if (b == 9)     // connect to I
-        {
-            finalGraph[4][5] = '-';
-        }
-        break;
-    case 4:     // D
-        if (b == 10)     // connect to J
-        {
-            finalGraph[2][1] = '-';
-        }
-        break;
-    case 5:     // E
-        if (b == 7)     // connect to G
-        {
-            finalGraph[6][2] = '+';
-            finalGraph[5][2] = '|';
-        }
-        if (b == 9)     // connect to I
-        {
-            finalGraph[6][4] = '+';
-            finalGraph[5][4] = '|';
-        }
-        break;
-    case 6:     //
-        if (b == 8)     // connect to H
-        {
-            finalGraph[2][5] = '-';
-        }
-        break;
-    case 7:     // G
-        if (b == 10)     // connect to J
-        {
-            finalGraph[3][2] = '|';
-        }
-        if (b == 9)     // connect to I
-        {
-            finalGraph[4][3] = '-';
-        }
-        break;
-    case 8:     // H
-        if (b == 10)     // connect to J
-        {
-            finalGraph[2][3] = '-';
-        }
-        if (b == 9)     // connect to I
-        {
-            finalGraph[3][4] = '|';
-        }
-        break;
-    }
-}
-
-
-void initmap() {
-    for (int i=0; i<7; i++)
-        for (int j=0; j<7; j++)
-           finalGraph[i][j] = ' ';
-}
-
-void setPlanetsGraph() {
-    finalGraph[0][3] = 'A';
-    finalGraph[4][0] = 'B';
-    finalGraph[4][6] = 'C';
-    finalGraph[2][0] = 'D';
-    finalGraph[6][3] = 'E';
-    finalGraph[2][6] = 'F';
-    finalGraph[4][2] = 'G';
-    finalGraph[2][4] = 'H';
-    finalGraph[4][4] = 'I';
-    finalGraph[2][2] = 'J';
-}
-
-void displayGraph() {
-    cout << endl;
-    cout << "FINAL GRAPH: " << endl;
-    for (int i=0; i<7; i++)
-    {
-        cout << "  ";
-        for (int j=0; j<7; j++)
-           cout << finalGraph[i][j];
-        cout << endl;
     }
 }
 
@@ -341,36 +389,11 @@ void displayShortestDistances() {
     }
 }
 
-void dijkstra() {
-    for(int i = 0; i < numberOfNodes - 1; i++) {
-        int nearestIndex = getNearestAdjacent();
-        nodesVisited[nearestIndex] = true;
-        for(int adjacent = 0; adjacent < numberOfNodes; adjacent++) {
-            if (
-                (!nodesVisited[adjacent])
-                &&
-                //there is a connection between the 2
-                (distanceMatrix[nearestIndex][adjacent] != THEORETICAL_MAX)
-                &&
-                //if going through this vertice would help reach destination faster
-                (distances[nearestIndex] + distanceMatrix[nearestIndex][adjacent] < distances[adjacent]) 
-            ) {
-                //this is now the new distance
-                distances[adjacent] = distances[nearestIndex] + distanceMatrix[nearestIndex][adjacent];
-                //to get to this node have to pass through this index
-                //can trace path later
-                passesThrough[adjacent] = nearestIndex;
-            }
-        }
-    }
-}
-
 int main() {
     loadFromFile();
     initializeMatrices();
     initmap();
     setPlanetsGraph();
-
     dijkstra();
     displayShortestDistances();
     displayGraph();
