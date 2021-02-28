@@ -3,7 +3,11 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <string>
+
 using namespace std;
+
+// classes:
 class Planet {
     public:
         string name;
@@ -50,6 +54,7 @@ Edge::Edge(Planet* start, Planet* end) {
 vector<Planet> planets;
 vector<Edge> edges;
 
+//Loading from file:
 void loadFromFile() {
     ifstream input;
     input.open("../A2planets.txt");
@@ -80,10 +85,12 @@ void loadFromFile() {
     input.close();   
 }
 
+//sort edges
 bool compare(const Edge lhs, const Edge rhs) {
    return lhs.distance < rhs.distance;
 }
 
+//identify parent node
 int getParent(int v, int parent[]){
     if(parent[v]==v){
         return v;
@@ -93,14 +100,13 @@ int getParent(int v, int parent[]){
 
 int main() {
     loadFromFile();
-    int n,E;
-    n = 10;
-    E = 18;
-
+    int n = 10;
+    int E = 18;
+    //sort edges
     sort(edges.begin(),edges.end(),&compare);
-
     Edge output[n-1];
 
+    // identify parent for each node
     int parent[n];
     for(int i=0;i<n;i++){
         parent[i]=i;
@@ -108,7 +114,6 @@ int main() {
 
     int count=0;
     int j=0;
-
     while(count<n-1){
         Edge currentEdge=edges[j];
         int p1=getParent(currentEdge.start->id,parent);
@@ -121,12 +126,40 @@ int main() {
         j++;
     }
 
+    // print table
+    cout << endl;   
+    cout << "Edges:" << endl;
+    cout << endl;
+    cout << "src \tdest \twt" << endl;
+ 
     for(int i=0;i<n-1;i++){
         if(output[i].start<output[i].end){
-            cout<<output[i].start->name <<" "<< output[i].end->name <<" "<< output[i].distance<<endl;
+            cout<<output[i].start->name.substr(7,1) <<"\t"<< output[i].end->name.substr(7,1) <<"\t"<< output[i].distance<<endl;
         }
-        else cout<<output[i].start->name <<" "<< output[i].end->name <<" "<< output[i].distance<<endl;
+        else cout<<output[i].start->name.substr(7,1) <<"\t"<< output[i].end->name.substr(7,1) <<"\t"<< output[i].distance<<endl;
     }
-    
+
+
+    // print graph
+    cout << endl;   
+    cout << "Graph:" << endl;
+    cout << endl;
+    string array[7][7] = {
+        {"+", "-", "-", "A" ,"-", "-", "+"},
+        {"|", " ", " ", " " ," ", " ", "|" },
+        {"D", " ", "J", "-" ,"H", " ", "F"},
+        {"|", " ", " ", " " ,"|", " ", " " },
+        {"B", "-", "G", "-" ,"I", "-", "C"},
+        {"|", " ", " ", " " ," ", " ", " " },
+        {"+", "-", "-", "E" ," ", " ", " " },
+    };
+    for (int i = 0; i < 7; ++i){
+        for(int j = 0; j < 7; ++j){
+			cout << array[i][j];
+		}
+		cout << endl; // start a new row
+    }
+
+
     return 0;
 }
