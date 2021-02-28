@@ -86,33 +86,34 @@ bool compare(const Edge lhs, const Edge rhs) {
 
 int getParent(int v, int parent[]){
     if(parent[v]==v){
-      cout << "parent equals v" << endl;
         return v;
     }
     return getParent(parent[v],parent);
 }
 
 int main() {
-    int n = 10;
-    int E = 18;
+    loadFromFile();
+    int n,E;
+    n = 10;
+    E = 18;
+
     sort(edges.begin(),edges.end(),&compare);
+
     Edge output[n-1];
+
     int parent[n];
     for(int i=0;i<n;i++){
         parent[i]=i;
     }
+
     int count=0;
     int j=0;
+
     while(count<n-1){
-        cout << edges[j].start->id << endl;
         Edge currentEdge=edges[j];
-        cout << currentEdge.start->id << endl;
         int p1=getParent(currentEdge.start->id,parent);
         int p2=getParent(currentEdge.end->id,parent);
-        cout << p1 << endl;
-        cout << p2 << endl;
         if(p1!=p2){
-            cout << "j is " << j << endl;
             output[count]=currentEdge;
             count++;
             parent[p1]=p2;
@@ -126,5 +127,6 @@ int main() {
         }
         else cout<<output[i].start->name <<" "<< output[i].end->name <<" "<< output[i].distance<<endl;
     }
+    
     return 0;
 }

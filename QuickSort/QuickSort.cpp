@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <cmath>
+#include <string>
 
 using namespace std;
 
@@ -29,10 +30,11 @@ Planet::Planet(int id, string name, int x, int y, int z, int weight, int profit)
     this->profit = profit;
     if(weight == 0){
         this->value =0;
+    } else {
+        this->value = static_cast<double>(profit)/static_cast<double>(weight);
     }
-    if(weight != 0) {
-        this->value = profit/weight;
-    }};
+    cout << this->value << endl;
+};
 
 class Edge {
     public: 
@@ -283,7 +285,7 @@ void quicksortPlanet(vector<Planet> &value, int left, int right) {
         //Print the list
         cout << setw(7) << "ID" << setw(15) << "Name" << setw(15) << "X"<< setw(15) << "Y"<< setw(15)<< "Z"<< setw(15)<< "Weight" << setw(15) << "Profit" <<setw(15) << "Value" << endl << endl;
         for (int i = 0; i < planets.size(); i++) {
-            cout << setw(7) << planets[i].id << setw(15) << planets[i].name << setw(15) << planets[i].x << setw(15)<< planets[i].y<< setw(15)<< planets[i].y <<setw(15)<< planets[i].weight << setw(15) << planets[i].profit <<setw(15) <<planets[i].value << endl;
+            cout << setw(7) << planets[i].id << setw(15) << planets[i].name << setw(15) << planets[i].x << setw(15)<< planets[i].y<< setw(15)<< planets[i].y <<setw(15)<< planets[i].weight << setw(15) << planets[i].profit << endl << setw(15) << planets[i].value << endl;
          }
         
     return 0;
