@@ -401,10 +401,6 @@ int main() {
     dijkstra();
     displayShortestDistances();
     displayGraph();
-
-    for(int i = 0; i < edges.size(); i++) {
-        cout << edges[i].start->name << " " << edges[i].end->name << " " << edges[i].distance << endl;
-    }
 }
 
 #endif
