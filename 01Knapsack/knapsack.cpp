@@ -81,7 +81,6 @@ void loadFromFile() {
     input.close();
 }
 
-
 const int capacity = 80;
 const int numItems = 10;
 int Knapsack[numItems + 1][capacity + 1];
@@ -92,7 +91,7 @@ vector<int> profits;
 struct sortByWeight
 {
     bool operator()( const Planet& lx, const Planet& rx ) const {
-        return lx.weight < rx.weight;
+        return rx.weight < lx.weight;
     }
 };
 
@@ -127,12 +126,13 @@ void knapsack() {
         }
         cout << endl;
     }
+    cout << endl;
     cout << "What planets to pass through boss?" << endl << endl;
     int i = numItems;
     int j = capacity;
 
-    int totalBenefit;
-    int totalWeight;
+    int totalBenefit = 0;
+    int totalWeight = 0;
 
     //iterate through table to see what items we take
     while(i > 0 && j > 0) {
@@ -155,8 +155,18 @@ void knapsack() {
     cout << "===================================" << endl;
 }
 
+void showPlanets() {
+    cout << "PLANETS SUMMARY: " << endl << endl;
+    cout << setw(7) << "ID" << setw(15) << "Name" << setw(15) << "X"<< setw(15) << "Y"<< setw(15)<< "Z"<< setw(15)<< "Weight" << setw(15) << "Profit" << setw(15) << endl << endl;
+    for (int i = 0; i < planets.size(); i++) {
+        cout << setw(7) << planets[i].id << setw(15) << planets[i].name << setw(15) << planets[i].x << setw(15)<< planets[i].y<< setw(15)<< planets[i].z <<setw(15)<< planets[i].weight << setw(15) << planets[i].profit << endl;
+    }
+    cout << endl << endl;
+}
+
 int main() {
     loadFromFile();
+    showPlanets();
     initializeMatrices();
     knapsack();
 }
