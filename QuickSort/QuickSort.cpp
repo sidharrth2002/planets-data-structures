@@ -104,7 +104,9 @@ void initializeMatrices() {
     //set edges that are actually connected
     for(int i = 0; i < edges.size(); i++) {
         distanceMatrix[edges[i].start->id][edges[i].end->id] = edges[i].distance;
-        
+        distanceMatrix[edges[i].end->id][edges[i].start->id] = edges[i].distance;
+        distanceMatrix[edges[i].start->id][edges[i].start->id] = 0;
+        distanceMatrix[edges[i].end->id][edges[i].end->id] = 0;        
     }
 
     //to print the adjacency matrix (can make it look better)
@@ -164,29 +166,16 @@ void Adjacencylist() {
         cout << " "<< endl;
         cout << "Adjacency list "<< endl;
          int V = 10; 
-        
-    vector<string> adj[V]; 
-    addEdge(adj, 0, planets[3].name); 
-    addEdge(adj, 0, planets[5].name);
-    addEdge(adj, 0, planets[7].name);
-    addEdge(adj, 0, planets[9].name);
-    addEdge(adj, 1, planets[4].name);
-    addEdge(adj, 1, planets[6].name);
-    addEdge(adj, 2, planets[4].name);
-    addEdge(adj, 3, planets[1].name);
-    addEdge(adj, 3, planets[9].name); 
-    addEdge(adj, 5, planets[2].name);
-    addEdge(adj, 6, planets[4].name);
-    addEdge(adj, 6, planets[8].name);
-    addEdge(adj, 7, planets[5].name);
-    addEdge(adj, 7, planets[8].name);
-    addEdge(adj, 8, planets[2].name);
-    addEdge(adj, 8, planets[4].name);
-    addEdge(adj, 9, planets[6].name);
-    addEdge(adj, 9, planets[7].name);
-    printGraph(adj, V); 
-        
 
+        for(int i = 0; i < 10; i++) {
+            cout << (char)(i + 65) << " ";
+            for (int j = 0; j < 10; j++) {
+                if(distanceMatrix[i][j] != THEORETICAL_MAX) {
+                    cout << "| " << (char)(j + 65) << "(" << distanceMatrix[i][j] << ") | -> ";
+                }
+            }
+            cout << endl;
+        }
 }
 
 
@@ -281,7 +270,7 @@ void quicksortPlanet(vector<Planet> &value, int left, int right) {
 
         //Print the list
          for (int i = 0; i < edges.size(); i++) {
-             cout << edges[i].start->id<< " " << edges[i].end->id << " -> "<< edges[i].distance<<  endl;
+             cout << (char)(edges[i].start->id + 65) << " " << (char)(edges[i].end->id + 65) << " -> "<< edges[i].distance << endl;
         }
         
 
