@@ -29,7 +29,7 @@ Planet::Planet(int id, string name, int x, int y, int z, int weight, int profit)
     this->z = z;
     this->weight = weight;
     this->profit = profit;
-    if(weight != 0) {
+    if (weight != 0) {
         this->value = profit/weight;
     }
 };
@@ -401,6 +401,10 @@ int main() {
     dijkstra();
     displayShortestDistances();
     displayGraph();
+
+    for(int i = 0; i < edges.size(); i++) {
+        cout << edges[i].start->name << " " << edges[i].end->name << " " << edges[i].distance << endl;
+    }
 }
 
 #endif
