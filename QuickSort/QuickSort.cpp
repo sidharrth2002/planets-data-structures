@@ -138,31 +138,8 @@ void initializeMatrices() {
     cout << endl << "=================================================================" << endl;
 }
 
-
-//Adjacency list 
-void addEdge(vector<string> adj[], int u, string v) 
-{ 
-    adj[u].push_back(v); 
-   
-} 
-
-void printGraph (vector<string> adj[], int V) 
-{ 
-    for (int v = 0; v < V; ++v) 
-    { 
-        cout << v ;
-        if (adj[v].empty()){
-                 cout << "->No adjacency";
-             } 
-    
-        for (auto x : adj[v]) {
-            cout << "->" << x; 
-           
-        }
-        printf("\n"); 
-    } 
-}  
-
+  
+//Adjacencylist
 void Adjacencylist() {
         
         cout << " "<< endl;
@@ -286,9 +263,9 @@ void quicksortPlanet(vector<Planet> &value, int left, int right) {
         cout << setw(7) << "ID" << setw(15) << "Name" << setw(15) << "X"<< setw(15) << "Y"<< setw(15)<< "Z"<< setw(15)<< "Weight" << setw(15) << "Profit" <<setw(15) << "Value" << endl << endl;
         for (int i = 0; i < planets.size(); i++) {
             if(planets[i].weight != 0) {
-                cout << setw(7) << planets[i].id << setw(15) << planets[i].name << setw(15) << planets[i].x << setw(15)<< planets[i].y<< setw(15)<< planets[i].y <<setw(15)<< planets[i].weight << setw(15) << planets[i].profit << setw(15) << fixed << setprecision(3) << planets[i].profit/(double)planets[i].weight << endl;
+                cout << setw(7) << planets[i].id << setw(15) << planets[i].name << setw(15) << planets[i].x << setw(15)<< planets[i].y<< setw(15)<< planets[i].z <<setw(15)<< planets[i].weight << setw(15) << planets[i].profit << setw(15) << fixed << setprecision(3) << planets[i].profit/(double)planets[i].weight << endl;
             } else {
-                cout << setw(7) << planets[i].id << setw(15) << planets[i].name << setw(15) << planets[i].x << setw(15)<< planets[i].y<< setw(15)<< planets[i].y <<setw(15)<< planets[i].weight << setw(15) << planets[i].profit << setw(15) << 0 << endl;
+                cout << setw(7) << planets[i].id << setw(15) << planets[i].name << setw(15) << planets[i].x << setw(15)<< planets[i].y<< setw(15)<< planets[i].z <<setw(15)<< planets[i].weight << setw(15) << planets[i].profit << setw(15) << 0 << endl;
             }
          }
         
